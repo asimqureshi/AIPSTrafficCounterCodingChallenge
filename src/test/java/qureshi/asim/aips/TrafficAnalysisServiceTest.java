@@ -1,9 +1,7 @@
 package qureshi.asim.aips;
 
-import org.junit.Test;
 import org.junit.Before;
-
-import static org.junit.Assert.*;
+import org.junit.Test;
 
 import java.net.URL;
 import java.nio.file.Paths;
@@ -11,6 +9,8 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+
+import static org.junit.Assert.*;
 
 public class TrafficAnalysisServiceTest {
     
