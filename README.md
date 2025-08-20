@@ -18,19 +18,19 @@ This Java application reads a file containing traffic data and provides comprehe
 To build the project, run:
 
 ```bash
-mvn clean compile
+./mvnw clean compile
 ```
 
 To run tests:
 
 ```bash
-mvn test
+./mvnw test
 ```
 
 To create an executable JAR:
 
 ```bash
-mvn clean package
+./mvnw clean package
 ```
 
 ## Usage
@@ -40,7 +40,7 @@ mvn clean package
 After building, you can run the application in the following way:
 
 ```bash
-mvn -q -DskipTests package && java -Djava.util.logging.config.file=src/main/resources/logging.properties -jar target/traffic-counter-analysis-1.0.0.jar src/main/resources/traffic_data.txt
+./mvnw -q -DskipTests package && java -Djava.util.logging.config.file=src/main/resources/logging.properties -jar target/traffic-counter-analysis-1.0.0.jar src/main/resources/traffic_data.txt
 ```
 
 ### Input File Format
