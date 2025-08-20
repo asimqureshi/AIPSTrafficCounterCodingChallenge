@@ -58,8 +58,9 @@ Example:
 ```
 
 ## Assumptions
-
+- Simplicity is chosen while coding, assuming input sizes are small
 - Input size fits in memory; the file is read entirely (`Files.readAllLines`).
 - Each non-empty line is exactly `yyyy-MM-ddTHH:mm:ss car_count`; empty lines are ignored; malformed lines cause an error.
 - `car_count` is a non-negative 32-bit integer.
 - Records are provided in chronological order. Contiguity is determined by exact 30-minute steps between consecutive records.
+- If there are more than 1 with same number of least cars for 3 contiguous records, the first one is only considered
