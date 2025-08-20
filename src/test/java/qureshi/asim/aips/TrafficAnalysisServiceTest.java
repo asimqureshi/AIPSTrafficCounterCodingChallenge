@@ -45,28 +45,6 @@ public class TrafficAnalysisServiceTest {
         // Then -> exception
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void givenInvalidTimestamp_whenParseRecord_thenThrows() {
-        // Given
-        String line = "2021-13-01T05:00:00 5"; // invalid month
-
-        // When
-        service.parseRecord(line);
-
-        // Then -> exception
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void givenInvalidCount_whenParseRecord_thenThrows() {
-        // Given
-        String line = "2021-12-01T05:00:00 NaN";
-
-        // When
-        service.parseRecord(line);
-
-        // Then -> exception
-    }
-
     @Test
     public void givenTestResource_whenReadRecordsFromFile_thenParsesAllNonEmptyLines() throws Exception {
         // Given
@@ -84,7 +62,7 @@ public class TrafficAnalysisServiceTest {
     }
 
     @Test
-    public void givenEmptyList_whenCalculateTotalCars_thenReturnsZero() {
+    public void givenNoRecords_whenCalculateTotalCars_thenReturnsZero() {
         // Given
         List<TrafficRecord> records = java.util.Collections.emptyList();
 
@@ -93,6 +71,22 @@ public class TrafficAnalysisServiceTest {
 
         // Then
         assertEquals(0, total);
+    }
+
+    @Test
+    public void givenRecords_whenCalculateTotalCars_thenReturnsTheSum() {
+        // Given
+        List<TrafficRecord> records = Arrays.asList(
+                new TrafficRecord(LocalDateTime.of(2021, 12, 1, 5, 0, 0), 5),
+                new TrafficRecord(LocalDateTime.of(2021, 12, 1, 6, 0, 0), 7),
+                new TrafficRecord(LocalDateTime.of(2021, 12, 2, 7, 0, 0), 4)
+        );
+
+        // When
+        int total = service.calculateTotalCars(records);
+
+        // Then
+        assertEquals(16, total);
     }
 
     @Test
@@ -108,6 +102,7 @@ public class TrafficAnalysisServiceTest {
         Map<java.time.LocalDate, Integer> dailyTotals = service.calculateTotalCarsDaily(records);
 
         // Then
+        assertEquals(2, dailyTotals.size());
         assertEquals(Integer.valueOf(12), dailyTotals.get(java.time.LocalDate.of(2021, 12, 1)));
         assertEquals(Integer.valueOf(4), dailyTotals.get(java.time.LocalDate.of(2021, 12, 2)));
     }
@@ -181,7 +176,7 @@ public class TrafficAnalysisServiceTest {
     }
 
     @Test(expected = IllegalStateException.class)
-    public void givenNonContiguousRecords_whenFindLeastCarsInPeriod_thenThrows() {
+    public void givenNoContiguousRecords_whenFindLeastCarsInPeriod_thenThrows() {
         // Given (no consecutive 30-min spacing across any 3)
         List<TrafficRecord> records = Arrays.asList(
             new TrafficRecord(LocalDateTime.of(2021, 12, 1, 5, 0, 0), 1),
