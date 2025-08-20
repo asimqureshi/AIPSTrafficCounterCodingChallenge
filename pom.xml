@@ -57,7 +57,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>qureshi.asim.aips.TrafficCounterAnalysis</mainClass>
+                            <mainClass>qureshi.asim.aips.TrafficCounterMain</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

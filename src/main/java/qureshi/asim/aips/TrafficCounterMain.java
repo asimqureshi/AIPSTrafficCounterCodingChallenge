@@ -7,8 +7,8 @@ import java.util.List;
  * Main class for the Traffic Counter Analysis Engine.
  * Reads traffic data from a file and provides various analytics.
  */
-public class TrafficCounterAnalysis {
-    private static final System.Logger LOGGER = System.getLogger(TrafficCounterAnalysis.class.getName());
+public class TrafficCounterMain {
+    private static final System.Logger LOGGER = System.getLogger(TrafficCounterMain.class.getName());
 
     public static void main(String[] args) {
         if (args.length != 1) {
@@ -20,7 +20,7 @@ public class TrafficCounterAnalysis {
         String inputFile = args[0];
 
         try {
-            TrafficCounterAnalysis analyzer = new TrafficCounterAnalysis();
+            TrafficCounterMain analyzer = new TrafficCounterMain();
             analyzer.analyzeTrafficData(inputFile);
         } catch (Exception e) {
             LOGGER.log(System.Logger.Level.ERROR, "Error analyzing traffic data: {0}", e.getMessage());
