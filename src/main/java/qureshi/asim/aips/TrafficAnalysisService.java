@@ -18,6 +18,8 @@ import java.util.stream.Collectors;
  */
 public class TrafficAnalysisService {
     
+    private static final System.Logger LOGGER = System.getLogger(TrafficAnalysisService.class.getName());
+
     private static final DateTimeFormatter INPUT_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
     private static final DateTimeFormatter OUTPUT_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private static final int INTERVAL_MINS = 30;
@@ -83,15 +85,24 @@ public class TrafficAnalysisService {
      * Finds the top n half-hour periods with the most cars.
      */
     public List<TrafficRecord> findTopKRecordsWithMostCars(@NonNull final List<TrafficRecord> records, int k) {
+        if (k <= 0) {
+            LOGGER.log(System.Logger.Level.WARNING, "Requested topK with k <= 0; returning empty list");
+            return List.of();
+        }
+        if (records.isEmpty()) {
+            LOGGER.log(System.Logger.Level.INFO, "No records provided; returning empty list for topK");
+            return List.of();
+        }
         // This can also be implemented using a min heap which can bring down the time/space complexity but this
         // approach has been chosen to keep the logic simple.
 
-        return records.stream()
+        List<TrafficRecord> result = records.stream()
                 .sorted((r1, r2) -> Integer.compare(r2.getCarCount(), r1.getCarCount()))
                 .limit(k)
                 .toList();
+        LOGGER.log(System.Logger.Level.INFO, "Selected top {0} out of {1} records", new Object[]{result.size(), records.size()});
+        return result;
     }
-
 
     /**
      * Finds the contiguous window of given size (half-hour records) with the least cars.
@@ -99,15 +110,18 @@ public class TrafficAnalysisService {
     public List<TrafficRecord> findContiguousRecordsWithLeastCars(@NonNull final List<TrafficRecord> records,
                                                                   int windowSize) {
         if (windowSize <= 0) {
+            LOGGER.log(System.Logger.Level.WARNING, "Invalid windowSize: {0}", windowSize);
             throw new IllegalArgumentException("windowSize must be > 0");
         }
         if (records.size() < windowSize) {
+            LOGGER.log(System.Logger.Level.WARNING, "Insufficient records: size={0}, required={1}", new Object[]{records.size(), windowSize});
             throw new IllegalArgumentException("Need at least " + windowSize + " records to find a contiguous window");
         }
 
         List<TrafficRecord> leastCarsPeriod = null;
         int minTotalCars = Integer.MAX_VALUE;
 
+        // Again a simpler implementation is adopted over a more complex one using sums
         for (int i = 0; i <= records.size() - windowSize; i++) {
             List<TrafficRecord> period = records.subList(i, i + windowSize);
             if (isContiguous(period)) {
@@ -115,14 +129,17 @@ public class TrafficAnalysisService {
                 if (totalCars < minTotalCars) {
                     minTotalCars = totalCars;
                     leastCarsPeriod = new ArrayList<>(period);
+                    LOGGER.log(System.Logger.Level.DEBUG, "New minimum window starting at index {0} with total {1}", new Object[]{i, minTotalCars});
                 }
             }
         }
 
         if (leastCarsPeriod == null) {
+            LOGGER.log(System.Logger.Level.WARNING, "No contiguous window of size {0} found", windowSize);
             throw new IllegalStateException("No contiguous window of size " + windowSize + " found");
         }
 
+        LOGGER.log(System.Logger.Level.INFO, "Least-cars window found: size={0}, total={1}", new Object[]{windowSize, minTotalCars});
         return leastCarsPeriod;
     }
 

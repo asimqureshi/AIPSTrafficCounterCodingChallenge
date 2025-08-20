@@ -56,3 +56,10 @@ Example:
 2021-12-01T05:30:00 12
 2021-12-01T06:00:00 14
 ```
+
+## Assumptions
+
+- Input size fits in memory; the file is read entirely (`Files.readAllLines`).
+- Each non-empty line is exactly `yyyy-MM-ddTHH:mm:ss car_count`; empty lines are ignored; malformed lines cause an error.
+- `car_count` is a non-negative 32-bit integer.
+- Records are provided in chronological order. Contiguity is determined by exact 30-minute steps between consecutive records.
