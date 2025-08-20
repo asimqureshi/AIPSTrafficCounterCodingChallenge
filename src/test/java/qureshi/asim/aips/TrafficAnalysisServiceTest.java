@@ -59,7 +59,7 @@ public class TrafficAnalysisServiceTest {
     @Test(expected = IllegalArgumentException.class)
     public void givenInvalidCount_whenParseRecord_thenThrows() {
         // Given
-        String line = "2021-12-01T05:00:00 notANumber";
+        String line = "2021-12-01T05:00:00 NaN";
 
         // When
         service.parseRecord(line);
@@ -70,8 +70,8 @@ public class TrafficAnalysisServiceTest {
     @Test
     public void givenTestResource_whenReadRecordsFromFile_thenParsesAllNonEmptyLines() throws Exception {
         // Given
-        URL resourceUrl = getClass().getClassLoader().getResource("traffic_sample.txt");
-        assertNotNull("Test resource traffic_sample.txt not found", resourceUrl);
+        URL resourceUrl = getClass().getClassLoader().getResource("traffic_test_data.txt");
+        assertNotNull("Test resource traffic_test_data.txt not found", resourceUrl);
         String path = Paths.get(resourceUrl.toURI()).toString();
 
         // When
@@ -113,7 +113,7 @@ public class TrafficAnalysisServiceTest {
     }
 
     @Test
-    public void givenRecords_whenFindTopNRecordsWithMostCars_thenReturnsTopNDescending() {
+    public void givenRecords_whenFindTopNRecordsWithMostCars_thenReturnsTopKDescending() {
         // Given
         List<TrafficRecord> records = Arrays.asList(
             new TrafficRecord(LocalDateTime.of(2021, 12, 1, 5, 0, 0), 5),
@@ -123,7 +123,7 @@ public class TrafficAnalysisServiceTest {
         );
 
         // When
-        List<TrafficRecord> top3 = service.findTopNRecordsWithMostCars(records, 3);
+        List<TrafficRecord> top3 = service.findTopKRecordsWithMostCars(records, 3);
 
         // Then
         assertEquals(3, top3.size());
@@ -133,7 +133,7 @@ public class TrafficAnalysisServiceTest {
     }
 
     @Test
-    public void givenNZero_whenFindTopNRecordsWithMostCars_thenReturnsEmptyList() {
+    public void givenNZero_whenFindTopKRecordsWithMostCars_thenReturnsEmptyList() {
         // Given
         List<TrafficRecord> records = Arrays.asList(
             new TrafficRecord(LocalDateTime.of(2021, 12, 1, 5, 0, 0), 5),
@@ -141,7 +141,7 @@ public class TrafficAnalysisServiceTest {
         );
 
         // When
-        List<TrafficRecord> top0 = service.findTopNRecordsWithMostCars(records, 0);
+        List<TrafficRecord> top0 = service.findTopKRecordsWithMostCars(records, 0);
 
         // Then
         assertTrue(top0.isEmpty());
@@ -159,7 +159,7 @@ public class TrafficAnalysisServiceTest {
         );
 
         // When
-        List<TrafficRecord> least = service.findNContiguousRecordsWithLeastCars(records, 3);
+        List<TrafficRecord> least = service.findContiguousRecordsWithLeastCars(records, 3);
 
         // Then
         assertEquals(3, least.size());
@@ -175,7 +175,7 @@ public class TrafficAnalysisServiceTest {
         );
 
         // When
-        service.findNContiguousRecordsWithLeastCars(records, 3);
+        service.findContiguousRecordsWithLeastCars(records, 3);
 
         // Then -> exception
     }
@@ -191,7 +191,7 @@ public class TrafficAnalysisServiceTest {
         );
 
         // When
-        service.findNContiguousRecordsWithLeastCars(records, 3);
+        service.findContiguousRecordsWithLeastCars(records, 3);
 
         // Then -> exception
     }
@@ -208,7 +208,7 @@ public class TrafficAnalysisServiceTest {
         );
 
         // When
-        List<TrafficRecord> least = service.findNContiguousRecordsWithLeastCars(records, 4);
+        List<TrafficRecord> least = service.findContiguousRecordsWithLeastCars(records, 4);
 
         // Then
         assertEquals(4, least.size());
@@ -225,7 +225,7 @@ public class TrafficAnalysisServiceTest {
         );
 
         // When
-        service.findNContiguousRecordsWithLeastCars(records, 4);
+        service.findContiguousRecordsWithLeastCars(records, 4);
 
         // Then -> exception
     }

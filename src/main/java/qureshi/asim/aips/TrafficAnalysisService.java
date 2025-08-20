@@ -80,10 +80,13 @@ public class TrafficAnalysisService {
     /**
      * Finds the top n half-hour periods with the most cars.
      */
-    public List<TrafficRecord> findTopNRecordsWithMostCars(@NonNull final List<TrafficRecord> records, int n) {
+    public List<TrafficRecord> findTopKRecordsWithMostCars(@NonNull final List<TrafficRecord> records, int k) {
+        // This can also be implemented using a min heap which can bring down the time/space complexity but this
+        // approach has been chosen to keep the logic simple.
+
         return records.stream()
                 .sorted((r1, r2) -> Integer.compare(r2.getCarCount(), r1.getCarCount()))
-                .limit(n)
+                .limit(k)
                 .toList();
     }
 
@@ -91,8 +94,8 @@ public class TrafficAnalysisService {
     /**
      * Finds the contiguous window of given size (half-hour records) with the least cars.
      */
-    public List<TrafficRecord> findNContiguousRecordsWithLeastCars(@NonNull final List<TrafficRecord> records,
-                                                                   int windowSize) {
+    public List<TrafficRecord> findContiguousRecordsWithLeastCars(@NonNull final List<TrafficRecord> records,
+                                                                  int windowSize) {
         if (windowSize <= 0) {
             throw new IllegalArgumentException("windowSize must be > 0");
         }

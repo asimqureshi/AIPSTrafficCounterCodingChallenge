@@ -58,13 +58,13 @@ public class TrafficCounterAnalysis {
 
         // 3. Top 3 half-hour periods
         LOGGER.log(System.Logger.Level.INFO, "Top 3 half-hour periods with most cars:");
-        List<TrafficRecord> top3HalfHours = service.findTopNRecordsWithMostCars(records, 3);
+        List<TrafficRecord> top3HalfHours = service.findTopKRecordsWithMostCars(records, 3);
         top3HalfHours.forEach(record -> LOGGER.log(System.Logger.Level.INFO, record.toString()));
 
         // 4. 1.5 hour period with least cars
         LOGGER.log(System.Logger.Level.INFO, "1.5 hour period with least cars:");
         try {
-            List<TrafficRecord> leastCarsPeriod = service.findNContiguousRecordsWithLeastCars(records, 3);
+            List<TrafficRecord> leastCarsPeriod = service.findContiguousRecordsWithLeastCars(records, 3);
             int periodTotal = leastCarsPeriod.stream()
                     .mapToInt(TrafficRecord::getCarCount)
                     .sum();
